@@ -1,0 +1,46 @@
+# OPENCL_PROFILE_LOG_VERSION 2.0
+# OPENCL_DEVICE 0 GeForce GTX 660 Ti
+# OPENCL_CONTEXT 1
+# OPENCL_PROFILE_CSV 1
+# TIMESTAMPFACTOR fffff695d87c74f0
+method,gputime,cputime,occupancy,branch,divergent_branch,l1_global_load_hit,l1_global_load_miss,uncached_global_load_transaction,global_store_transaction
+memcpyHtoDasync,1.728,5.000
+memcpyHtoDasync,0.576,3.000
+memcpyHtoDasync,1.632,4.000
+memcpyHtoDasync,1.088,3.000
+memcpyHtoDasync,1.120,2.000
+memcpyHtoDasync,1.696,3.000
+memcpyHtoDasync,0.608,2.000
+memcpyHtoDasync,1.664,3.000
+memcpyHtoDasync,1.088,3.000
+memcpyHtoDasync,1.088,2.000
+vertex_kernel,7.520,21.000,1.000,182,12,25,5,0,222
+edge_kernel,690.048,699.000,0.750,10680,0,146730,960,0,16
+reduce,4.672,62.000,0.688,72,0,0,16,0,2
+memcpyDtoHasync,1.600,11.000
+memcpyHtoDasync,0.992,4.000
+memcpyHtoDasync,0.576,2.000
+memcpyHtoDasync,0.960,3.000
+memcpyHtoDasync,0.736,2.000
+memcpyHtoDasync,0.768,2.000
+vertex_kernel,7.264,68.000,1.000,118,8,16,4,0,148
+edge_kernel,290.816,313.000,0.750,4072,0,59187,149,0,16
+reduce,4.352,13.000,0.688,72,0,0,16,0,2
+memcpyDtoHasync,1.632,9.000
+memcpyHtoDasync,1.088,3.000
+memcpyHtoDasync,0.576,2.000
+memcpyHtoDasync,1.088,3.000
+memcpyHtoDasync,0.800,3.000
+memcpyHtoDasync,0.800,3.000
+vertex_kernel,7.136,16.000,1.000,108,8,16,4,0,148
+edge_kernel,311.616,331.000,0.750,4824,0,64686,166,0,16
+reduce,4.064,12.000,0.688,72,0,0,16,0,2
+memcpyDtoHasync,1.600,8.000
+memcpyHtoDasync,1.024,4.000
+memcpyHtoDasync,0.544,3.000
+memcpyHtoDasync,0.992,3.000
+memcpyHtoDasync,0.768,2.000
+memcpyHtoDasync,0.768,2.000
+vertex_kernel,6.464,16.000,1.000,108,8,16,4,0,148
+edge_kernel,285.184,294.000,0.750,4440,0,58649,159,0,16
+reduce,4.000,24.000,0.688,72,0,0,16,0,2

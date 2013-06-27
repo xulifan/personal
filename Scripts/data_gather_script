@@ -1,0 +1,47 @@
+#!/bin/bash
+
+OUTER_PATH="`pwd`/*"
+DIRECTORY="`pwd`"
+
+rm data_sheet
+for currDir in $OUTER_PATH
+do
+    if [ $currDir != "$DIRECTORY/CL" ] && [ $currDir != "$DIRECTORY/Practice" ];
+		then
+		if [ -d $currDir ]
+			then
+					cd $currDir
+					echo $currDir 
+					rm cpu_sheet
+					rm gpu_sheet
+					rm miss_sheet
+					for i in 1 2 3 4 5 6 7 8 9 10
+					do
+					    output="run$i.txt"
+					    #echo $output
+					    awk '/CPU/{print$3}' $output >> cpu_sheet
+					    awk '/GPU/{print$3}' $output >> gpu_sheet
+					    awk '/misses/{print$4}' $output >> miss_sheet
+					done
+					avg_miss=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' miss_sheet`;
+                    avg_gpu=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' gpu_sheet`;
+                    avg_cpu=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' cpu_sheet`;
+                    rm avg.txt
+					echo "GPU time" $avg_gpu >>avg.txt
+                    echo "CPU time" $avg_cpu >>avg.txt
+                    echo "miss    " $avg_miss >>avg.txt
+					echo $currDir $avg_gpu $avg_cpu $avg_miss >> ../data_sheet
+					#awk '/CPU/{print$3}' tesla_double_out >> ../data_sheet
+					#awk '/CPU/{print$3}' tesla_float_out >> ../data_sheet
+					#awk '/GPU/{print$3}' fermi_double_out >> ../data_sheet
+					#awk '/GPU/{print$3}' fermi_float_out >> ../data_sheet
+					#awk '/GPU/{print$3}' tesla_double_out >> ../data_sheet
+					#awk '/GPU/{print$3}' tesla_float_out >> ../data_sheet
+					#awk '/misses/{print$4}' fermi_double_out >> ../data_sheet
+					#awk '/misses/{print$4}' fermi_float_out >> ../data_sheet
+					#awk '/misses/{print$4}' tesla_double_out >> ../data_sheet					
+					#awk '/misses/{print$4}' tesla_float_out >> ../data_sheet
+			fi
+	fi
+
+done

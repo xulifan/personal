@@ -1,0 +1,12 @@
+count=1
+numgraph=600
+cat DD_select_name | while [ $count -le $numgraph ] 
+        do
+            read LINE
+            
+            echo $LINE
+            count=`expr $count + 1`
+            cp DD/$LINE ./DD_sub/$count
+        done
+        
+

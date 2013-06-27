@@ -1,0 +1,75 @@
+#!/bin/bash
+
+OUTER_PATH="`pwd`/*"
+
+DIRECTORY="`pwd`"
+
+for currDir in $OUTER_PATH
+do
+
+    if [ $currDir != "$DIRECTORY/CL" ] && [ $currDir != "$DIRECTORY/Practice" ];
+    then
+
+		if [ -d $currDir ]
+				then
+
+					echo $currDir
+					cd $currDir
+					#rm my_job*
+					#rm *_out
+					sed '/typedef float real/s//typedef double real/g' *.c > a.sed
+					mv a.sed *.c
+					sed '/typedef float real/s//typedef double real/g' *.cl > a.sed
+					mv a.sed *.cl
+					make
+					for i in 1 2 3 4 5 6 7 8 9 10
+					do
+					    output="run$i.txt"
+					    echo $output
+					    ./*.exe > $output
+					done
+			fi
+	fi
+
+done
+
+cd $DIRECTORY
+sh data_gather_script
+mv data_sheet double_tesla_out
+
+for currDir in $OUTER_PATH
+do
+
+    if [ $currDir != "$DIRECTORY/CL" ] && [ $currDir != "$DIRECTORY/Practice" ];
+    then
+
+		if [ -d $currDir ]
+				then
+				   
+					echo $currDir
+					cd $currDir
+					#rm my_job*
+					#rm *_out
+					#sed '/OpenCL_SDK=/usa/lxu/NVIDIA_GPU_Computing_SDK/s//OpenCL_SDK=/global/homes/s/sgrauerg/NVIDIA_GPU_Computing_SDK/g' Makefile > a.sed
+					#mv a.sed Makefile
+					sed '/typedef double real/s//typedef float real/g' *.c > a.sed
+                                        mv a.sed *.c
+                                        sed '/typedef double real/s//typedef float real/g' *.cl > a.sed
+                                        mv a.sed *.cl
+					make
+					for i in 1 2 3 4 5 6 7 8 9 10
+					do
+					    output="run$i.txt"
+					    echo $output
+					    ./*.exe > $output
+					done
+			fi
+	fi
+
+done
+
+cd $DIRECTORY
+sh data_gather_script
+mv data_sheet float_tesla_out
+
+

@@ -1,0 +1,12 @@
+input=$1
+count=1
+numgraph=80
+cat $input | while [ $count -le $numgraph ] 
+        do
+            read LINE
+            
+            echo $LINE
+            
+            cp graphs/$LINE graphs_renamed/$count
+            count=`expr $count + 1`
+        done

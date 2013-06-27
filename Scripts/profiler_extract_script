@@ -1,0 +1,72 @@
+#!/bin/bash
+
+input=$1
+rm vert_occu
+awk -F',' '/vertex_kernel/{print$4}' $input >>vert_occu
+v_occu=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' vert_occu`;
+
+rm vert_branch
+awk -F',' '/vertex_kernel/{print$5}' $input >>vert_branch
+v_branch=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' vert_branch`;
+
+rm vert_dbranch
+awk -F',' '/vertex_kernel/{print$6}' $input >>vert_dbranch
+v_dbranch=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' vert_dbranch`;
+
+rm vert_hit
+awk -F',' '/vertex_kernel/{print$7}' $input >>vert_hit
+v_hit=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' vert_hit`;
+
+rm vert_miss
+awk -F',' '/vertex_kernel/{print$8}' $input >>vert_miss
+v_miss=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' vert_miss`;
+
+
+rm vert_load
+awk -F',' '/vertex_kernel/{print$9}' $input >>vert_load
+v_load=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' vert_load`;
+
+rm vert_store
+awk -F',' '/vertex_kernel/{print$10}' $input >>vert_store
+v_store=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' vert_store`;
+
+
+############
+rm edge_occu
+awk -F',' '/edge_kernel/{print$4}' $input >>edge_occu
+e_occu=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' edge_occu`;
+
+rm edge_branch
+awk -F',' '/edge_kernel/{print$5}' $input >>edge_branch
+e_branch=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' edge_branch`;
+
+rm edge_dbranch
+awk -F',' '/edge_kernel/{print$6}' $input >>edge_dbranch
+e_dbranch=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' edge_dbranch`;
+
+rm edge_hit
+awk -F',' '/edge_kernel/{print$7}' $input >>edge_hit
+e_hit=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' edge_hit`;
+
+rm edge_miss
+awk -F',' '/edge_kernel/{print$8}' $input >>edge_miss
+e_miss=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' edge_miss`;
+
+
+rm edge_load
+awk -F',' '/edge_kernel/{print$9}' $input >>edge_load
+e_load=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' edge_load`;
+
+rm edge_store
+awk -F',' '/edge_kernel/{print$10}' $input >>edge_store
+e_store=`awk ' BEGIN{sum=0; num=0;}{sum+=$1; num++;}END{ print sum/num}' edge_store`;
+
+
+
+
+
+echo $v_occu $v_branch $v_dbranch $v_hit $v_miss $v_load $v_store
+echo $e_occu $e_branch $e_dbranch $e_hit $e_miss $e_load $e_store
+
+
+

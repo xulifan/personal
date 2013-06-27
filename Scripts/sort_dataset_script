@@ -1,0 +1,23 @@
+OUTER_PATH="`pwd`/*"
+DIRECTORY="`pwd`"
+
+numtree=$2
+FILENAME=$1
+count=1
+
+echo "\n$output"
+
+cat $FILENAME | while [ $count -le $numtree ] 
+do
+       read name num_node
+       name=`expr $name + 1`
+       
+       file="$DIRECTORY/NCI109/$name"
+       #num_node=$(head -1 $file)
+       cp $file "$DIRECTORY/NCI109_sorted/$count"
+       count=`expr $count + 1`
+       echo "$count $file $num_node"
+       
+done
+
+echo "Total $count Lines read"
