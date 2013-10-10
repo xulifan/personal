@@ -28,13 +28,15 @@ for line in f:
             #print parse[i]
         #del parse[7]
         parse_rm_empty=[x for x in parse if x!= '']
-        #print parse_rm_empty
-        if parse_rm_empty[0] not in kernels:
-            kernels.append(parse_rm_empty[0])
+        kernel_name_parse=parse_rm_empty[0].split('__')
+        real_kernel_name=kernel_name_parse[0]
+        parse_rm_empty[0]=kernel_name_parse[0]
+        if real_kernel_name not in kernels:
+            kernels.append(real_kernel_name)
         #print parse
         data.append(parse_rm_empty)
-#print data
-#print kernels
+print data
+print kernels
 n_col=len(data[0])
 #print n_col
 
