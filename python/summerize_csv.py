@@ -35,10 +35,19 @@ for line in f:
             kernels.append(real_kernel_name)
         #print parse
         data.append(parse_rm_empty)
-print data
-print kernels
+#print data
+#print kernels
 n_col=len(data[0])
 #print n_col
+
+line_20_split=line_20.split()
+Time_index=line_20_split.index('Time,')
+VALUInsts_index=line_20_split.index('VALUInsts,')
+VFetchInsts_index=line_20_split.index('VFetchInsts,')
+VWriteInsts_index=line_20_split.index('VWriteInsts,')
+VALUUtilization_index=line_20_split.index('VALUUtilization,')
+FetchSize_index=line_20_split.index('FetchSize,')
+WriteSize_index=line_20_split.index('WriteSize,')
 
 n_kernel=len(kernels)
 print "num of kernrels is ",n_kernel," : ",kernels
@@ -106,13 +115,13 @@ for i in range(n_kernel):
                 f_output.write(str(output[i][j]))
             f_output.write(' ')
             j+=1
-        Time=output[i][10]
-        VALUInsts=output[i][17]
-        VFetchInsts=output[i][19]
-        VWriteInsts=output[i][21]
-        VALUUtilization=output[i][23]
-        FetchSize=output[i][26]
-        WriteSize=output[i][32]
+        Time=output[i][Time_index+4]
+        VALUInsts=output[i][VALUInsts_index+4]
+        VFetchInsts=output[i][VFetchInsts_index+4]
+        VWriteInsts=output[i][VWriteInsts_index+4]
+        VALUUtilization=output[i][VALUUtilization_index+4]
+        FetchSize=output[i][FetchSize_index+4]
+        WriteSize=output[i][WriteSize_index+4]
     else:
         while j < n_col:
             if j==4:
@@ -122,13 +131,13 @@ for i in range(n_kernel):
                 f_output.write(str(output[i][j]))
             f_output.write(' ')
             j+=1
-        Time=output[i][8]
-        VALUInsts=output[i][15]
-        VFetchInsts=output[i][17]
-        VWriteInsts=output[i][19]
-        VALUUtilization=output[i][21]
-        FetchSize=output[i][24]
-        WriteSize=output[i][30]
+        Time=output[i][Time_index+2]
+        VALUInsts=output[i][VALUInsts_index+2]
+        VFetchInsts=output[i][VFetchInsts_index+2]
+        VWriteInsts=output[i][VWriteInsts_index+2]
+        VALUUtilization=output[i][VALUUtilization_index+2]
+        FetchSize=output[i][FetchSize_index+2]
+        WriteSize=output[i][WriteSize_index+2]
         
     temp1=VALUInsts/(VFetchInsts+VWriteInsts)
     temp2=(FetchSize+WriteSize)/Time
