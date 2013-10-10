@@ -7,8 +7,6 @@ if input[-1:]!='/':
     input += '/'
 for dirs in listdir(input):
     #if dirs[-6:]==".graph":
-    if dirs[-4:]==".txt":
-        
         f=open(input + dirs,'r')
         line=f.readline()
         line=line.split()
@@ -24,9 +22,11 @@ for dirs in listdir(input):
             temp+=1
             line=f.readline()
             line=line.split()
-            line=[int(i) for i in line]
+            #line=[int(i) for i in line]
+            line=[float(i) for i in line]
             adjsum+=sum(line)
-        if(adjsum == 0):
+        #if(adjsum == 0):
+        if(adjsum < 0.0000001):
             os.remove(input+dirs)
             print dirs, n_nodes, n_feats,adjsum
             
