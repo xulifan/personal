@@ -7,7 +7,7 @@ if input[-1:]!='/':
     input += '/'
 for dirs in listdir(input):
     #if dirs[-6:]==".graph":
-        #print dirs
+        print dirs
         f=open(input + dirs,'r')
         line=f.readline()
         line=line.split()
