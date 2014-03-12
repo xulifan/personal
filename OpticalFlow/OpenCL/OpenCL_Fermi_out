@@ -1,0 +1,14 @@
+number of platforms is 2
+platform 0 vendor is NVIDIA Corporation
+platform 0 name is NVIDIA CUDA
+device id is 9497408
+platform 1 vendor is Advanced Micro Devices, Inc.
+Platform is not NVIDIA, check next platform
+device name is GeForce GTX 480
+Copying 2 images from CPU to GPU: 1 ms
+Converting from RGB to greyscale: 0 ms
+Generating the pyramids: 0 ms
+Tracking: 53 ms
+Copying results from GPU to CPU: 38 ms
+Total time for cudaLK: 92 ms
+Opencv: 1016 ms

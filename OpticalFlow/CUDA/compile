@@ -1,0 +1,2 @@
+nvcc cudaLK.cu -c cudaLK.o -O2  -g
+nvcc -O2 cudaLK.o main.cc  -o cudaLK  -I/usr/include/opencv -L/usr/lib -L/usr/local/lib -lcudart -lcv -lhighgui -g
