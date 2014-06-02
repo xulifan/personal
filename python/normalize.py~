@@ -30,7 +30,7 @@ for dirs in listdir(input):
             featsum=sum(line)
             #print line
             if featsum != 0:
-                line=[round(i/featsum,6) for i in line]
+                line=[round(i/featsum,4) for i in line]
             line=[str(i) for i in line]
             #print line
             line=" ".join(line)
