@@ -4,18 +4,13 @@ from os.path import isfile, join
 
 
 #
-# python convert_strace_to_graph_oneapp.py ./original_data_from_DrJose/delaware-benign/all-android-benign-samples-set-14-results/2014.02.11.15.52.10/ ./benign/ good
+# python collect_system_call_list.py 6 ~/Software/genymotion-2.3.0/genymotion/tools/output_benign_10s/ ~/Software/genymotion-2.3.0/genymotion/tools/output_2014_10s/ ~/Software/genymotion-2.3.0/genymotion/tools/output_2013_10s/ ~/Software/genymotion-2.3.0/genymotion/tools/output_2012_10s/ ~/Software/genymotion-2.3.0/genymotion/tools/output_2014_120s/ ~/Software/genymotion-2.3.0/genymotion/tools/output_2013_120s/
 #
-
-
-
-
-
-sys_calls=['select', 'ioctl', 'recvmsg', 'futex', 'munmap', 'sigprocmask', '_exit', 'open', 'getdents64', 'mmap2', 'madvise', 'mprotect', 'clone', 'set_thread_area', 'prctl', 'gettid', 'getuid32', 'mkdir', 'unshare', 'lstat64', 'chmod', 'chown32', 'mount', 'setgroups32', 'setgid32', 'setuid32', 'personality', 'capset', 'access', 'sched_setscheduler', 'setrlimit', 'sigaction', 'clock_gettime', 'getpgid', 'setpgid', 'sendmsg', 'socket', 'pipe', 'getpid', 'connect', 'getsockopt', 'sendto', 'close', 'fcntl64', 'epoll_create', 'epoll_ctl', 'gettimeofday', 'epoll_wait', 'setpriority', 'getpriority', 'read', 'write', 'stat64', '_llseek', 'pread64', 'lseek', 'flock', 'fstat64', 'nanosleep', 'writev', 'brk', 'sched_yield', 'statfs64', 'unlink', 'umask', 'fchown32', 'pwrite64', 'fdatasync', 'geteuid32', 'getgid32', 'getegid32', 'socketpair', 'bind', 'recvfrom', 'fsync', 'rename', 'setsockopt', 'getsockname', 'poll', 'dup', 'ftruncate', 'rt_sigaction', 'rt_sigprocmask', 'get_thread_area', 'sigaltstack', 'getuid', 'fork', 'dup2', 'getrlimit', 'execve', 'exit_group', 'wait4', 'restart_syscall', 'ftruncate64', 'utimes', 'getpeername', 'sigreturn', 'fchmod', 'msync', 'rmdir', 'uname', 'clock_getres', 'readlink', 'tkill', 'sigsuspend', 'rt_sigreturn', 'sched_getparam', 'sched_getscheduler', 'sched_get_priority_min', 'sched_get_priority_max', 'shutdown', 'kill', 'listen', 'setitimer', 'accept', 'symlink', 'getcwd', 'getgroups32', 'getppid', 'setresgid32', 'setresuid32', 'inotify_init', 'inotify_add_watch', 'rt_sigtimedwait', 'tgkill', 'inotify_rm_watch', 'getrusage', 'sched_getaffinity', 'sched_setaffinity', 'chdir', 'mlock', 'munlock', 'setsid', 'vfork', 'fstatfs64', 'sync', 'old_mmap', 'ptrace', 'times', 'mknod', 'pipe2', 'timer_create', 'truncate']
-sys_calls_count=[ 0 for i in range(len(sys_calls))]
-
+'''
+['select', 'ioctl', 'recvmsg', 'futex', 'munmap', 'sigprocmask', '_exit', 'open', 'getdents64', 'mmap2', 'madvise', 'mprotect', 'clone', 'set_thread_area', 'prctl', 'gettid', 'getuid32', 'mkdir', 'unshare', 'lstat64', 'chmod', 'chown32', 'mount', 'setgroups32', 'setgid32', 'setuid32', 'personality', 'capset', 'access', 'sched_setscheduler', 'setrlimit', 'sigaction', 'clock_gettime', 'getpgid', 'setpgid', 'sendmsg', 'socket', 'pipe', 'getpid', 'connect', 'getsockopt', 'sendto', 'close', 'fcntl64', 'epoll_create', 'epoll_ctl', 'gettimeofday', 'epoll_wait', 'setpriority', 'getpriority', 'read', 'write', 'stat64', '_llseek', 'pread64', 'lseek', 'flock', 'fstat64', 'nanosleep', 'writev', 'brk', 'sched_yield', 'statfs64', 'unlink', 'umask', 'fchown32', 'pwrite64', 'fdatasync', 'geteuid32', 'getgid32', 'getegid32', 'socketpair', 'bind', 'recvfrom', 'fsync', 'rename', 'setsockopt', 'getsockname', 'poll', 'dup', 'ftruncate', 'rt_sigaction', 'rt_sigprocmask', 'get_thread_area', 'sigaltstack', 'getuid', 'fork', 'dup2', 'getrlimit', 'execve', 'exit_group', 'wait4', 'restart_syscall', 'ftruncate64', 'utimes', 'getpeername', 'sigreturn', 'fchmod', 'msync', 'rmdir', 'uname', 'clock_getres', 'readlink', 'tkill', 'sigsuspend', 'rt_sigreturn', 'sched_getparam', 'sched_getscheduler', 'sched_get_priority_min', 'sched_get_priority_max', 'shutdown', 'kill', 'listen', 'setitimer', 'accept', 'symlink', 'getcwd', 'getgroups32', 'getppid', 'setresgid32', 'setresuid32', 'inotify_init', 'inotify_add_watch', 'rt_sigtimedwait', 'tgkill', 'inotify_rm_watch', 'getrusage', 'sched_getaffinity', 'sched_setaffinity', 'chdir', 'mlock', 'munlock', 'setsid', 'vfork', 'fstatfs64', 'sync', 'old_mmap', 'ptrace', 'times', 'mknod', 'pipe2', 'timer_create', 'truncate'] 143
+'''
 class graph:
-    def __init__(self,inputfile,pid,app_name,root_num,outputdirec,label,systemcalls,sys_calls_count):
+    def __init__(self,inputfile,pid,app_name,root_num,outputdirec,label,systemcalls):
         self.filename=inputfile
         self.app_name=app_name
         self.input_direc=self.filename
@@ -39,7 +34,7 @@ class graph:
         self.uni_pid=[]
         self.uni_pname=[]
     
-    def read_strace(self,systemcalls,sys_calls_count):
+    def read_strace(self,systemcalls):
         f=open(self.filename,'r')
         contents=f.readlines()
         f.close()
@@ -80,9 +75,8 @@ class graph:
                     #[pid  1114] 03:51:33 --- {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1115, si_status=0, si_utime=0, si_stime=1} (Child exited) ---
                     continue
                 if pname not in systemcalls:
-                    print 'Error! Not in the system call list: ',pname,self.filename
-                else:
-                    sys_calls_count[systemcalls.index(pname)]+=1
+                    systemcalls.append(pname)
+                    print 'add into the system call list: ',pname,self.filename
             except:
                 print self.filename
                 print original_item
@@ -93,13 +87,14 @@ class graph:
         
 
 
+sys_calls_all=[]
 
 n_folder=int(sys.argv[1])
 input_folder=[]
 for i in range(n_folder):
     tmp=sys.argv[2+i].rstrip('/')
     input_folder.append(tmp)
-n_graphs=0
+
 for folder in input_folder:
     for dirs in listdir(folder):
         #print dirs
@@ -138,31 +133,14 @@ for folder in input_folder:
                 print 'Cannot find strace.out !', dirs
                 continue
             
-            n_graphs+=1
+       
             #print 'converting ', dirs
-            g=graph(strace_filename,app_id,app_name,root_num,folder,'nothing',sys_calls,sys_calls_count)
-            g.read_strace(sys_calls,sys_calls_count)
+            g=graph(strace_filename,app_id,app_name,root_num,folder,'nothing',sys_calls_all)
+            g.read_strace(sys_calls_all)
             
 
-#print sys_calls_all,len(sys_calls_all) 
-#print sys_calls_count
-sys_calls_statistics=zip(sys_calls,sys_calls_count)
-for item in sys_calls_statistics:
-    print item[0],float(item[1])/float(n_graphs)
-
-#print sys_calls_statistics
-sorted_list=sorted(sys_calls_statistics,key=lambda x: x[1])
-
-
-#print sorted_list
-print '\n'
-print n_graphs
-print '\n\n\n'
-for item in sorted_list:
-    print item[0],float(item[1])/float(n_graphs)
-
-
-
+print sys_calls_all,len(sys_calls_all) 
+    
     
 
 

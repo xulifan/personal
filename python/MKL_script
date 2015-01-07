@@ -1,0 +1,43 @@
+
+#input1=./Vehicle/graph_phowhist_8c_2t_512w_1nn_scaledist/SPGK-INTERSECT.kernel.original
+#input2=./Vehicle/graph_phowhist_8c_2t_512w_1nn_scaledist/UNGK-1-INTERSECT.kernel.original
+
+#input1=./Vehicle/graph_phowhist_8c_4t_1024w_1nn_scaledist/SPGK-INTERSECT.kernel.original
+#input2=./Vehicle/graph_phowhist_8c_4t_1024w_1nn_scaledist/UNGK-0-INTERSECT.kernel.original
+
+#input1=./Vehicle/graph_phowhist_8c_8t_1024w_1nn_scaledist/SPGK-INTERSECT.kernel.original
+#input2=./Vehicle/graph_phowhist_8c_8t_1024w_1nn_scaledist/UNGK-0-INTERSECT.kernel.original
+
+#input1=./Vehicle/graph_phowhist_8c_2t_512w_1nn_scaledist/SPGK-INTERSECT.kernel.original
+#input2=./Vehicle/graph_phowhist_8c_2t_512w_1nn_scaledist/SPGK-GAUSSIAN-0.1.kernel.original
+
+#for i in 1 2 4 8 16 32 64 128 256 1024
+#do
+    #echo $input1 $input2 $i
+    #python combine_matrix.py 2 $input1 $input2 1 $i
+    #python combine_matrix.py 2 $input1 $input2 $i 1
+#done
+
+
+#input1=./Vehicle/graph_phowhist_8c_2t_512w_1nn_scaledist/SPGK-INTERSECT.kernel.original
+#input2=./Vehicle/graph_phowhist_8c_4t_1024w_1nn_scaledist/SPGK-INTERSECT.kernel.original
+#input3=./Vehicle/graph_phowhist_8c_8t_1024w_1nn_scaledist/SPGK-INTERSECT.kernel.original
+
+#input1=./Vehicle/graph_phowhist_8c_2t_512w_1nn_scaledist/UNGK-1-INTERSECT.kernel.original
+#input2=./Vehicle/graph_phowhist_8c_4t_1024w_1nn_scaledist/UNGK-0-INTERSECT.kernel.original
+#input3=./Vehicle/graph_phowhist_8c_8t_1024w_1nn_scaledist/UNGK-0-INTERSECT.kernel.original
+
+input1=./Vehicle/graph_phowhist_8c_2t_512w_1nn_scaledist/SPGK-INTERSECT.kernel.original
+input2=./Vehicle/graph_phowhist_8c_4t_1024w_1nn_scaledist/UNGK-0-INTERSECT.kernel.original
+input3=./Vehicle/graph_phowhist_8c_8t_1024w_1nn_scaledist/SPGK-INTERSECT.kernel.original
+
+for i in 1 2 4 8 16 32 64 128 256 1024
+do
+    for j in 1 2 4 8 16 32 64 128 256 1024
+    do
+        for k in 1 2 4 8 16 32 64 128 256 1024
+        do
+            python combine_matrix.py 3 $input1 $input2 $input3 $i $j $k
+        done
+    done    
+done

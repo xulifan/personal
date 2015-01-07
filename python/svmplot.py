@@ -1,25 +1,47 @@
 import sys
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+from matplotlib.backends.backend_pdf import PdfPages
 import numpy as np
 
 input=sys.argv[1]
 
 f=open(input,'r')
 plotdata=[]
+
 for line in f:
     line=line.strip()
     parse=line.split()
-    parse[8]=parse[8].lstrip('(')
-    parse[8]=parse[8].rstrip(':')
-    parse[8]=parse[8].rstrip(')')
-    parse[5]=parse[5].rstrip('.kernel')
-    parse[9]=float(parse[9])
-    parse[8]=float(parse[8])
-    trim=[parse[5],parse[8],parse[9]]
-    plotdata.append(trim)
+    c_idx=0
+    while c_idx<len(parse):
+        if parse[c_idx][0] == '(' and parse[c_idx][-1:]==':' :
+            break
+        c_idx+=1
+    kernel_idx=0
+    while kernel_idx<len(parse):
+        if len(parse[kernel_idx])>7 and parse[kernel_idx][-7:]==".kernel":
+            break
+        kernel_idx+=1
+    acc_idx=len(parse)-1
+
+    parse[c_idx]=parse[c_idx].lstrip('(')
+    parse[c_idx]=parse[c_idx].rstrip(':')
+    parse[c_idx]=parse[c_idx].rstrip(')')
+
+    parse[kernel_idx]=parse[kernel_idx].rstrip('.kernel')
+    parse[acc_idx]=float(parse[acc_idx])
+    parse[c_idx]=float(parse[c_idx])
+    trim=[parse[kernel_idx],parse[c_idx],parse[acc_idx]]
     #print trim
-#print plotdata
+    #print parse[kernel_idx][0:7]
+    #if parse[kernel_idx][0:7] != 'GAUSS-1':
+    #    plotdata.append(trim)
+    plotdata.append(trim)
+    #print parse,c_idx,kernel_idx
+print plotdata
+
+
+
 num_rec = len(plotdata)
 print "total number of records is", num_rec
 
@@ -83,8 +105,13 @@ for i in range(0,num_gks):
 lgd=plt.legend(bbox_to_anchor=(1.5, 1.0),fancybox=True, shadow=True)
 plt.ylabel('Accuracy')
 plt.xlabel('C values')
-plt.xticks(ticks,c_values)
+plt.ylim([0.6,1.0])
+plt.title(input)
+plt.xticks(ticks,c_values,rotation=70)
 #plt.show()
 fig.savefig(input+'_fig', bbox_extra_artists=(lgd,), bbox_inches='tight')
+#pdf=PdfPages(input+'_fig.pdf')
+#pdf.savefig(fig)
+#pdf.close()
 
 

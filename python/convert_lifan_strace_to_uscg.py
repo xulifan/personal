@@ -38,6 +38,7 @@ class graph:
         self.filter_contents=[]
         self.uni_pid=[]
         self.uni_pname=[]
+        self.dfs_visit=[]
     
     def read_strace(self):
         f=open(self.filename,'r')
@@ -48,6 +49,8 @@ class graph:
 
         
         for item in contents:
+            #print item
+            original_item=item
             if item[0] != '[':
                 continue
             if 'unfinished' in item:
@@ -56,19 +59,38 @@ class graph:
             pid=''
             pname=''
             result='1'
-            
-            if 'resumed>' in item:
-                item=item.split()
-                pid=item[1][:-1]
-                pname=item[4]
-                result=item[-1]
-            else:
-                item=item.split()
-                pid=item[1][:-1]
-                pname=item[3]
-                pname=pname[0:pname.find('(')]
-                result=item[-1]
-            
+            try:
+                if 'resumed>' in item:
+                    item=item.split()
+                    pid=item[1][:-1]
+                    pname=item[4]
+                    result=item[-1]
+                else:
+                    #print item
+                    item=item.split()
+                    if len(item) > 4:
+                        pid=item[1][:-1]
+                        pname=item[3]
+                        pname=pname[0:pname.find('(')]
+                        result=item[-1]
+                    else:
+                        continue
+                
+                if '++' in pname:
+                    #[pid  1117] 05:43:30 +++ killed by SIGTERM +++
+                    continue
+                if '--' in pname:
+                    #[pid  1114] 03:51:33 --- {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1115, si_status=0, si_utime=0, si_stime=1} (Child exited) ---
+                    continue
+                
+            except:
+                print 'Error in parsing strace log file ',pid,pname,result, sys.exc_info()[0]
+                print self.filename
+                print original_item
+                print contents.index(original_item)
+                print 'Quit!'
+                sys.exit()
+                    
             if pname not in self.uni_pname:
                 self.uni_pname.append(pname)
             
@@ -199,14 +221,85 @@ class graph:
         f.write('}')
         f.close()   
             
-
-
+    def output_json(self):
+        self.dfs_visit=[0 for i in range(self.n_node)]
+        
+        input_direc=self.input_direc
+        
+        json_name='./test_json/'+input_direc+'.json'
+        f=open(json_name,'w')
+        indent=0
+        self.dfs(0,indent,f)
+        f.close() 
+        
+        
+    def dfs(self,node_id,indent,f):
+        node_limit=50
+        self.dfs_visit[node_id]=1
+        for i in range(indent):
+            f.write(' ')
+        f.write('{\n')
+        
+        for i in range(indent+2):
+            f.write(' ')
+        f.write("\"name\": \"")
+        f.write(self.node_label[node_id])
+        f.write("\",\n")
+        
+        for i in range(indent+2):
+            f.write(' ')
+        f.write("\"size\": \"")
+        #f.write(str(sum(self.feat_mat[node_id])))
+        f.write("1\"")
+        
+        has_child=0
+        for item in self.edge_list:
+            start=item[0]
+            end=item[1]
+            if start==node_id:
+                has_child=1
+                break
+            
+        if has_child !=0:
+            f.write(",\n")
+            for i in range(indent+2):
+                f.write(' ')
+            f.write("\"children\": [\n")
+        else:
+            f.write("\n")
+            
+        
+        first_child=1
+        num_child=0
+        for item in self.edge_list:
+            start=item[0]
+            end=item[1]
+            
+            if (node_id==start and self.dfs_visit[end] == 0 and (num_child<node_limit or self.node_label[end] == 'fork' or self.node_label[end] == 'clone')):
+                num_child+=1
+                if first_child==0:
+                    for j in range(indent+2):
+                        f.write(' ')
+                    f.write(",\n")
+                self.dfs(end,indent+2,f)
+                first_child=0
+                
+        self.dfs_visit[node_id]=2   
+        
+        if has_child !=0:
+            for i in range(indent+2):
+                f.write(' ')
+            f.write("]\n")
+            
+        for i in range(indent):
+            f.write(' ')
+        f.write('}\n')  
 
 
 '''
 sys_calls=['recvmsg', 'open', 'fork', 'clone', 'access', 'socket', 'connect', 'getsockopt', 'sendto', 'sendmsg', 'stat64', 'pread', 'fstat64', 'statfs64', 'rename', 'chmod', 'lstat64', 'unlink', 'mkdir', 'setsockopt', 'recvfrom', 'socketpair', 'bind', 'pwrite', 'getsockname', 'wait4', 'listen', 'execve', 'shutdown', 'rmdir', 'getcwd', 'ftruncate64', 'utimes', 'readlink', 'chdir', 'accept', 'getpeername', 'symlink', 'syscall_11', 'truncate', 'vfork']
 '''
-sys_calls=['select', 'ioctl', 'recvmsg', 'recv', 'munmap', 'open', 'pivot_root', 'close', 'sigaction', 'fork', 'mprotect', 'clone', 'syscall_983045', 'prctl', 'SYS_224', 'write', 'setgroups32', 'setgid32', 'fstat64', 'setuid32', 'personality', 'capset', 'setrlimit', 'msgget', 'setpriority', 'getpriority', 'socket', 'pipe', 'getpid', 'connect', 'getsockopt', 'getpgid', 'setpgid', 'sendmsg', 'fcntl64', 'access', 'getuid32', 'ipc_subcall', 'semop', 'semget', 'dup', 'read', 'writev', 'stat64', '_llseek', 'pread', 'gettimeofday', 'mkdir', 'chmod', 'lseek', 'sched_getparam', 'sched_getscheduler', 'syscall_983042', 'sigprocmask', 'getdents64', 'flock', 'nanosleep', 'pwrite', 'fsync', 'unlink', 'ftruncate', 'geteuid32', 'getgid32', 'getegid32', 'socketpair', 'bind', 'rename', 'lstat64', 'setsockopt', 'getsockname', 'rt_sigtimedwait', 'recvfrom', 'poll', 'dup2', 'getrlimit', 'execve', 'wait4', 'uname', 'fchmod', 'msync', 'sched_yield', 'shutdown', 'listen', 'rmdir', 'sigaltstack', 'rt_sigreturn', 'setitimer', 'getpeername', 'msgctl', 'getcwd', 'getgroups32', 'chdir', 'getrusage', 'symlink', 'vfork', 'ftruncate64', 'kill', 'sched_get_priority_min', 'sched_get_priority_max', 'mlock', 'umask', 'fchown32', 'munlock', 'chown32', 'readlink', 'setup', 'setsid', 'getdents', 'fdatasync', 'sendto']
+sys_calls=['select', 'ioctl', 'recvmsg', 'futex', 'munmap', 'sigprocmask', '_exit', 'open', 'getdents64', 'mmap2', 'madvise', 'mprotect', 'clone', 'set_thread_area', 'prctl', 'gettid', 'getuid32', 'mkdir', 'unshare', 'lstat64', 'chmod', 'chown32', 'mount', 'setgroups32', 'setgid32', 'setuid32', 'personality', 'capset', 'access', 'sched_setscheduler', 'setrlimit', 'sigaction', 'clock_gettime', 'getpgid', 'setpgid', 'sendmsg', 'socket', 'pipe', 'getpid', 'connect', 'getsockopt', 'sendto', 'close', 'fcntl64', 'epoll_create', 'epoll_ctl', 'gettimeofday', 'epoll_wait', 'setpriority', 'getpriority', 'read', 'write', 'stat64', '_llseek', 'pread64', 'lseek', 'flock', 'fstat64', 'nanosleep', 'writev', 'brk', 'sched_yield', 'statfs64', 'unlink', 'umask', 'fchown32', 'pwrite64', 'fdatasync', 'geteuid32', 'getgid32', 'getegid32', 'socketpair', 'bind', 'recvfrom', 'fsync', 'rename', 'setsockopt', 'getsockname', 'poll', 'dup', 'ftruncate', 'rt_sigaction', 'rt_sigprocmask', 'get_thread_area', 'sigaltstack', 'getuid', 'fork', 'dup2', 'getrlimit', 'execve', 'exit_group', 'wait4', 'restart_syscall', 'ftruncate64', 'utimes', 'getpeername', 'sigreturn', 'fchmod', 'msync', 'rmdir', 'uname', 'clock_getres', 'readlink', 'tkill', 'sigsuspend', 'rt_sigreturn', 'sched_getparam', 'sched_getscheduler', 'sched_get_priority_min', 'sched_get_priority_max', 'shutdown', 'kill', 'listen', 'setitimer', 'accept', 'symlink', 'getcwd', 'getgroups32', 'getppid', 'setresgid32', 'setresuid32', 'inotify_init', 'inotify_add_watch', 'rt_sigtimedwait', 'tgkill', 'inotify_rm_watch', 'getrusage', 'sched_getaffinity', 'sched_setaffinity', 'chdir', 'mlock', 'munlock', 'setsid', 'vfork', 'fstatfs64', 'sync', 'old_mmap', 'ptrace', 'times', 'mknod', 'pipe2', 'timer_create', 'truncate']
 
 
 sys_calls_all=[]
@@ -232,17 +325,20 @@ for dirs in listdir(input):
             f=open(apk_dir+'/information.out','r')
             lines=f.readlines()
             f.close()
-            
-            for line in lines:
-                line=line.split()
-                if line[0]=='Package:':
-                    app_name=line[1]
-                if line[0]=='ZygotePID:':
-                    root_num=int(line[1])
-                if line[0]=='AppPID:':
-                    app_id=int(line[1])
+            try:
+                for line in lines:
+                    line=line.split()
+                    if line[0]=='Package:':
+                        app_name=line[1]
+                    if line[0]=='ZygotePID:':
+                        root_num=int(line[1])
+                    if line[0]=='AppPID:':
+                        app_id=int(line[1])
+            except:
+                print 'Error in ',apk_dir
+                continue                    
         else:
-            print 'Cannot find information.out !'
+            print 'Cannot find information.out ! ',dirs
             continue
         
             
@@ -255,7 +351,7 @@ for dirs in listdir(input):
 
        
    
-        #print 'converting ', dirs
+        print 'converting ', dirs
         g=graph(strace_filename,app_id,app_name,root_num,output,sys.argv[3],sys_calls)
         g.read_strace()
         #for item in g.uni_pname:
@@ -264,7 +360,8 @@ for dirs in listdir(input):
         g.create_fork_list()
         g.create_label_and_edgelist()
         g.output_graph_edge()  
-        g.output_dot_graph()
+        #g.output_dot_graph()
+        g.output_json()
 #print sys_calls_all,len(sys_calls_all) 
     
     

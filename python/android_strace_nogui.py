@@ -22,7 +22,7 @@ for item in listdir(input_direc):
     #
     #   start AVD on background
     #
-    subprocess.call("~/Software/adt-bundle-linux-x86_64-20140702/sdk/tools/emulator -avd AVD0 -wipe-data -no-boot-anim -no-window &",shell=True)
+    subprocess.call("~/Software/adt-bundle-linux-x86_64-20140702/sdk/tools/emulator -avd 4.2.2_avd -wipe-data -no-boot-anim -no-window &",shell=True)
     #./emulator -avd AVD2 -wipe-data -no-boot-anim -no-window
     #time.sleep(30)
     
@@ -53,19 +53,25 @@ for item in listdir(input_direc):
     #
     #   check the device is fully loaded 
     #
-    while True:
+    check_device=0
+    while check_count<50:
+        check_count+=1
         try:
-            #getprop_output=subprocess.check_output("./adb wait-for-device shell getprop init.svc.servicemanager",stderr=subprocess.STDOUT,shell=True)
-            #print 'getprop_output ',getprop_output
-            #if 'running' in getprop_output:
-            #    break;
-            
+            time.sleep(5)
             getprop_output=subprocess.check_output("./adb shell pm list features",stderr=subprocess.STDOUT,shell=True)
             #print 'getprop_output ',getprop_output
             if 'feature' in getprop_output:
-                break;
+                check_device=1
+                break
         except:
-            pass
+            print "Unexpected error from checking device: ", sys.exc_info()
+            break
+    if check_device==0:
+        print 'check device error!'
+        subprocess.call("./adb emu kill",shell=True)
+        continue
+    
+    
     
     #
     #   get zygote PID
